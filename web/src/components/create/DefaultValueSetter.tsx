@@ -13,6 +13,7 @@ export interface QueryChoiceHandlerProps {
 	useContext?: () => FormDataContext;
 	ignoreLoading?: boolean;
 	setData?: (data: any | ((data: any) => any)) => void;
+	onCatch?: (error: any) => void;
 }
 
 export function DefaultValueFormSetter({
@@ -21,6 +22,7 @@ export function DefaultValueFormSetter({
 	useContext = useFormDataContext,
 	ignoreLoading = false,
 	setData = (data) => {},
+	onCatch = (error) => {},
 }: QueryChoiceHandlerProps) {
 	const { state, dispatch } = useContext();
 
@@ -82,7 +84,7 @@ export function DefaultValueFormSetter({
 				copy.forms[i].state = !copy.forms[i].state;
 			}
 			dispatch({ type: 'state', state: copy });
-		});
+		}).catch(onCatch);
 	}, [state.isLoading, url]);
 
 	return <></>;

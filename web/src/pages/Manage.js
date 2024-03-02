@@ -1,6 +1,6 @@
 import React from "react";
 import MainFramework from "../components/MainFramework";
-import { Backdrop, Box, Card, CardContent, CircularProgress, Fade, Typography } from "@mui/material";
+import { Backdrop, Box, Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
@@ -10,14 +10,18 @@ import { ErrorButton, SuccessButton } from "../components/buttons/Buttons.js";
 import { fetchAny, postAny } from "../clients/dataRequest.js";
 import dayjs from "dayjs";
 import { useDefaultMessageContext } from "../providers/AlertMessage.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { DefaultValueFormSetter } from "../components/create/DefaultValueSetter.tsx";
+import CustomButton from "../components/buttons/CustomButton.js";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { client } from "../clients/clients.js";
 
-
-export default function Home() {
+export default function Manage() {
     
     const navigate = useNavigate();
     const {setNewAlert} = useDefaultMessageContext();
     const [reload, setReload] = React.useState(false);
+    const {id} = useParams();
     const [loading, setLoading] = React.useState(false);
 
     async function onSubmit(inputs) {
@@ -26,14 +30,32 @@ export default function Home() {
 
         setLoading(true);
         try{
-            await postAny('registry', data);
-            navigate('/thank-you');
+            await client.put(`registry/${id}`, data);
+            navigate('/thank-you', {state: {message: 'Pomyślnie zmodyfikowano wpis'}});
         }
         catch(err){
             setReload(!reload);
             let details = err.response.data?.details;
             if (!details){
                 details = 'Nie udało się zarejestrować';
+            } 
+            setNewAlert(details, 'error');
+        }
+        setLoading(false);
+    }
+
+    async function deleteEntry(){
+        setLoading(true);
+        try{
+            await client.delete(`registry/${id}`);
+            navigate('/thank-you', {state: {message: 
+                'Pomyślnie usunięto wpis'}});
+        }
+        catch(err){
+            setReload(!reload);
+            let details = err.response.data?.details;
+            if (!details){
+                details = 'Nie udało się usunąć';
             } 
             setNewAlert(details, 'error');
         }
@@ -49,42 +71,42 @@ export default function Home() {
             }}
             open={loading}
         >
-                <MuiCard
-                    title="Wysyłanie emaila potwierdzającego..."
-                    cardStyle={{
-                        textAlign: 'center',
-                        padding: '20px',
-                        backgroundColor: '#ECF2FD'
-                    }}
-                    headerStyle={{paddingBottom: '8px'}}
-                >
-                    <CircularProgress color={'primary'} />
-                </MuiCard>
+            <CircularProgress color={'primary'} />
         </Backdrop>
-        
+
         <MainFramework>
             <Box padding={3} textAlign={'center'}>
                 <FormDataProvider forms={registerForms}>
                     <FormSubmitHandler onSubmit={onSubmit}>
-                        <DateDiscard fetch={reload}/>
+                        <DateDiscard loader={reload} />
+                        <DefaultValueFormSetter 
+                            url={`registry/${id}`} 
+                            datakeys={['first_name', 'last_name', 'email', 'address','phone_number', 'date']} 
+                            ignoreLoading 
+                            onCatch={(err) => {
+                                navigate('error')
+                            }}
+                        />
                         <MuiCard
                             sx={{ marginTop: '20px', padding: '10px' }}
-                            title={"Zarejestruj się"}
-                            subheader="Wypełnij poniższe pola, aby zarejestrować się na udział w peregrynacji ikony po parafii Miłosierdzia Bożego."
+                            title={"Zmodyfikuj dane"}
+                            subheader="Możesz zmodyfikować dane w formularzu poniżej lub usunąć wpis."
                             cardStyle={{ backgroundColor: '#F6FBFF' }}
                             headerStyle={{ paddingBottom: '8px' }}
-
                         >
                             <CreateFormHandler grids={[4,4,4,4,4,4]} />
                             <Box
                                 sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
                             >
-                                <ErrorButton
-                                    text="Anuluj"
-                                    props={{ onClick: () => {} }}
+                                <CustomButton
+                                    buttonBaseProps={{ type: 'button', onClick: deleteEntry }}
+                                    btnStyle={{ backgroundColor: '#FFEBEE' }}
+                                    boxStyle={{ color: '#B71C1C' }}
+                                    icon={<DeleteIcon />}
+                                    text="Usuń"
                                 />
                                 <Box sx={{ flexGrow: 1 }}></Box>
-                                <SuccessButton text={"Zarejestruj się"} />
+                                <SuccessButton text={"Zmodyfikuj "} />
                             </Box>
                         </MuiCard>
                     </FormSubmitHandler>
@@ -92,19 +114,24 @@ export default function Home() {
             </Box>
         </MainFramework>
         </>
-        
     );
 }
 
-function DateDiscard({fetch = true}){
-    const {dispatch} = useFormDataContext();
+function DateDiscard({loader=true}){
+    const {state, dispatch} = useFormDataContext();
 
     React.useEffect(() => {
+        if (!state.forms[5].default_value){
+            return;
+        }
         fetchAny('registry')
             .then((data) => {
                 let dates = [];
                 if(data){
                     dates = data.map((date) => new dayjs(date.date));
+                    dates = dates.filter((date) => !date.isSame(
+                        state.forms[5].value
+                    ));
                     console.log(dates);
                 }
                 dispatch({type: 'update-field', id: 5, field: 'dateProps', value: {
@@ -117,7 +144,7 @@ function DateDiscard({fetch = true}){
                 console.log(err);
             });
     }
-    , [fetch]);
+    , [loader, state.forms[5].default_value]);
 
     return (<></>)
 }

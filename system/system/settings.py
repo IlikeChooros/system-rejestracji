@@ -134,10 +134,10 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'stmp.gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mondelezworkersite@gmail.com'
+EMAIL_HOST_PASSWORD = 'kyrm rsvh jopp nzae'  # past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mondelezworkersite@gmail.com'
-EMAIL_HOST_PASSWORD = 'kyrm rsvh jopp nzae'
-DEFAULT_FROM_EMAIL = ''
+DEFAULT_FROM_EMAIL = 'Rejestracja udzialu'

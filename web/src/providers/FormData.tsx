@@ -97,6 +97,10 @@ function reducer(state: FormState, action: Actions): FormState {
 			return { ...state, forms: copy };
 		case 'loaded':
 			return { ...state, isLoading: false };
+		case 'update-field':
+			copy[action.id][action.field] = action.value;
+			copy[action.id].state = !copy[action.id].state;
+			return { ...state, forms: copy };
 		default:
 			return { ...state };
 	}

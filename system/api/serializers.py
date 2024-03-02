@@ -19,11 +19,22 @@ def getFieldWithNoneSupport(obj: models.models.Model = None, field='name', defau
 
 
 def formatDate(date: datetime.datetime, default=None):
-    return date.strftime('%d.%m.%Y') if date else default
+    return date.strftime('%Y-%m-%d') if date else default
 
 class RegistrySerializer(FastBaseSerializer):
     def serialize(self, entry: models.Registry):
         return {
+            'date': formatDate(entry.date),
+        }
+
+class DataRegistrySerializer(FastBaseSerializer):
+    def serialize(self, entry: models.Registry):
+        return {
+            'first_name': entry.first_name,
+            'last_name': entry.last_name,
+            'phone_number': entry.phone_number,
+            'address': entry.address,
+            'email': entry.email,
             'date': formatDate(entry.date),
         }
 

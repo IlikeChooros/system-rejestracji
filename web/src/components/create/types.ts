@@ -24,7 +24,8 @@ export type Actions =
 	| { type: 'clear' }
 	| { type: 'loaded' }
 	| { type: 'set-filters'; params: Map<string, string> }
-	| { type: 'checkbox'; id: number; option: DatalistElement };
+	| { type: 'checkbox'; id: number; option: DatalistElement }
+	| { type: 'update-field'; id: number; field: string; value: any };
 
 export type HandleCheckboxType = (
 	input: InputHandlerForm,
