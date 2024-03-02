@@ -39,7 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'api.apps.ApiConfig', # Add this line to the list of installed apps
+    # app
+    'api.apps.ApiConfig',
+
+    # 3rd party apps
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -101,8 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-AUTH_USER_MODEL = 'api.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
