@@ -32,5 +32,6 @@ class UploadRegistrySerializer(serializers.ModelSerializer):
         model = models.Registry
         fields = '__all__'
         extra_kwargs = {
-            'email': {'required': False},
+            'email': {'error_messages': {'unique': 'Email jest już zajęty'}},
+            'phone_number': {'error_messages': {'unique': 'Numer telefonu jest już zajęty'}},
         }

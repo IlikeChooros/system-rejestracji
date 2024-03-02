@@ -15,7 +15,7 @@ export default function CreateInputDate({
 					textField: {
 						fullWidth: true,
 						size: 'small',
-						color: 'secondary',
+						color: 'primary',
 						variant: 'standard',
 						label: input.name,
 						name: input.field_name,
@@ -24,6 +24,7 @@ export default function CreateInputDate({
 				}}
 				value={input.value}
 				onChange={(date) => onChange(input, date)}
+				{...input.dateProps}
 			/>
 		</LocalizationProvider>
 	);

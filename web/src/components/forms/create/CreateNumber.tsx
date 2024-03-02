@@ -17,7 +17,7 @@ export default function CreateInputNumber({
 			}}
 			fullWidth
 			size="small"
-			color="secondary"
+			color="primary"
 			variant="standard"
 			{...input.props}
 		/>

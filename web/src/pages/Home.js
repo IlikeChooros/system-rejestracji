@@ -1,19 +1,35 @@
 import React from "react";
 import MainFramework from "../components/MainFramework";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { registerForms } from "../datastructures/input-objects.ts";
+import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
 import MuiCard from "../components/mui-ready/MuiCard.js";
 import { CreateFormHandler } from "../components/create/CreateFormHandler.tsx";
 import { ErrorButton, SuccessButton } from "../components/buttons/Buttons.js";
+import { fetchAny, postAny } from "../clients/dataRequest.js";
 
 
 export default function Home() {
     
-    function onSubmit(inputs) {
-        console.log(inputs);
+    async function onSubmit(inputs) {
+        let data = serializeFormsToEntries(inputs);
+        data = Object.fromEntries(data);
+
+        try{
+            postAny('registry', data);
+        }
+        catch(err){
+            console.log(err);
+        }
     }
+
+    React.useEffect(() => {
+        fetchAny('registry').then((res) => {
+            console.log(res);
+        });
+    }
+    , []);
 
     return (
         <MainFramework>
@@ -23,10 +39,12 @@ export default function Home() {
                         <MuiCard
                             sx={{ marginTop: '20px', padding: '10px' }}
                             title={"Zarejestruj się"}
-                            cardStyle={{ backgroundColor: '#ffffff' }}
+                            subheader="Wypełnij poniższe pola, aby zarejestrować się na udział w peregrynacji ikony po parafii Miłosierdzia Bożego."
+                            cardStyle={{ backgroundColor: '#F6F8FC' }}
                             headerStyle={{ paddingBottom: '8px' }}
+
                         >
-                            <CreateFormHandler grids={[4,4,4,6,6]} />
+                            <CreateFormHandler grids={[4,4,4,4,4,4]} />
                             <Box
                                 sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
                             >

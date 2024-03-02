@@ -15,7 +15,7 @@ export default function CreateInputText({
 			}}
 			fullWidth
 			size="small"
-			color="secondary"
+			color="primary"
 			variant="standard"
 			{...input.props}
 		/>

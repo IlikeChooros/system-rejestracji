@@ -5,3 +5,9 @@ export function fetchAny(url) {
 		.get(url)
 		.then((res) => res?.data)
 }
+
+export function postAny(url, data) {
+	return client
+		.post(url, data)
+		.then((res) => res?.data)
+}

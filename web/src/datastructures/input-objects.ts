@@ -1,4 +1,5 @@
 import { BaseTextFieldProps } from '@mui/material/TextField';
+import { DatePickerProps } from '@mui/x-date-pickers';
 import { serializeDate } from './converters';
 import dayjs from 'dayjs';
 
@@ -54,7 +55,7 @@ export interface InputTemplateForm {
 	default_value: InputValue;
 	datalist?: Datalist;
 	props?: BaseTextFieldProps;
-	dateProps?: DateProps;
+	dateProps?: DatePickerProps<dayjs.Dayjs>;
 	validator?: InputValidator;
 	toString: InputValueConverter;
 	relativeValidator?: RealtiveInputValidator;
@@ -423,15 +424,16 @@ export function translateInputProps(
 export const registerForms: Array<InputTemplateForm> = [
 	createStringInput('Imię', 'first_name', '', { required: true }),
 	createStringInput('Nazwisko', 'last_name', '', {required: true}),
+	createStringInput('Email', 'email', '', {'type': 'email', required: true}),
+	createStringInput('Adres', 'address', '', { required: true }),
 	createStringInput('Telefon', 'phone_number', '', { required: true, helperText: 'Telefon musi być poprawny' }, undefined, (input: InputValue) => {
 		const phone = input?.toString();
 		if (phone === undefined || !phone.length) {
 			return false;
 		}
 		// phone number validation
-		return phone.length === 9 && /^[0-9\b]+$/.test(phone);
+		return !(defaultNumberValidator(phone) && phone.length === 9);
 	}),
-	createStringInput('Email', 'email', '', {'type': 'email'}),
-	createDateInput('Data odebrania ikony', 'birthdate', null, { required: true }),
+	createDateInput('Data przyjęcia ikony', 'date', null, { required: true }, {disablePast: true}),
 ];
 

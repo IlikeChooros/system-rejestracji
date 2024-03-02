@@ -4,7 +4,6 @@ import {
 	useFormDataContext,
 } from '../../providers/FormData.tsx';
 import { fetchAny } from '../../clients/dataRequest.js';
-import { useNavigate } from 'react-router-dom';
 import { Datalist } from '../../datastructures/input-objects.ts';
 
 interface QueryChoiceHandlerProps {
