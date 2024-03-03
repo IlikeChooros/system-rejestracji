@@ -11,7 +11,7 @@ class Registry(models.Model):
     phone_number = models.CharField(max_length=150)
 
     address = models.CharField(max_length=150, blank=True, null=True)
-    email = models.EmailField(unique=True, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     date = models.DateField()
 
     deleted = models.BooleanField(default=False)

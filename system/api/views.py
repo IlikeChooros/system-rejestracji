@@ -20,7 +20,7 @@ class RegistryView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
-        if models.Registry.objects.filter(Q(date=data['date'])).exists():
+        if models.Registry.objects.filter(Q(date=data['date']) & Q(deleted=False)).exists():
             return Response({'details': 'Wizyta w tym dniu jest już zarejestrowana'}, status=status.HTTP_400_BAD_REQUEST)
         
 
