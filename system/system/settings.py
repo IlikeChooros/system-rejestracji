@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-l*qr_t*!!oq3%4r!8kzeqlq-jb*2e_$r1^(yp6@g#kv=zbtz*o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,7 +44,6 @@ INSTALLED_APPS = [
 
     # 3rd party apps
     'rest_framework',
-    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +86,19 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'init_command': 'SET default_storage_engine=INNODB',
+#         },
+#         'NAME': 'ikona',
+#         'USER': 'ikona',
+#         'PASSWORD': 'ikona.1234',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
@@ -137,7 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mondelezworkersite@gmail.com'
-EMAIL_HOST_PASSWORD = 'kyrm rsvh jopp nzae'  # past the key or password app here
+EMAIL_HOST_PASSWORD = 'kyrm rsvh jopp nzae'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Rejestracja udzialu'
