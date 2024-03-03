@@ -8,6 +8,7 @@ export default function CreateSwitchInput({
 }: CreateInputTextProps) {
 	return (
 		<FormControlLabel
+			sx={{textAlign: 'left'}}
 			control={
 				<Checkbox
 					value={input.value}
@@ -15,7 +16,9 @@ export default function CreateSwitchInput({
 						onChange(input, e.target.checked);
 					}}
 					name={input.field_name}
-					color="secondary"
+					color="primary"
+					required={input.props?.required}
+					
 				/>
 			}
 			label={input.name}

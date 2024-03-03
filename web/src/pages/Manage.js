@@ -1,13 +1,13 @@
 import React from "react";
 import MainFramework from "../components/MainFramework";
-import { Backdrop, Box, Card, CardContent, CircularProgress, Typography } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
 import MuiCard from "../components/mui-ready/MuiCard.js";
 import { CreateFormHandler } from "../components/create/CreateFormHandler.tsx";
-import { ErrorButton, SuccessButton } from "../components/buttons/Buttons.js";
-import { fetchAny, postAny } from "../clients/dataRequest.js";
+import { SuccessButton } from "../components/buttons/Buttons.js";
+import { fetchAny } from "../clients/dataRequest.js";
 import dayjs from "dayjs";
 import { useDefaultMessageContext } from "../providers/AlertMessage.js";
 import { useNavigate, useParams } from "react-router-dom";
@@ -119,20 +119,17 @@ export default function Manage() {
 
 function DateDiscard({loader=true}){
     const {state, dispatch} = useFormDataContext();
+    const {id} = useParams();
 
     React.useEffect(() => {
         if (!state.forms[5].default_value){
             return;
         }
-        fetchAny('registry')
+        fetchAny(`registry?exclude=${id}`)
             .then((data) => {
                 let dates = [];
                 if(data){
                     dates = data.map((date) => new dayjs(date.date));
-                    dates = dates.filter((date) => !date.isSame(
-                        state.forms[5].value
-                    ));
-                    console.log(dates);
                 }
                 dispatch({type: 'update-field', id: 5, field: 'dateProps', value: {
                     disablePast: true,

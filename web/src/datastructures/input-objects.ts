@@ -215,6 +215,7 @@ export function createSwitchInput(
 	name: string,
 	field_name: string,
 	default_value: boolean = false,
+	props?: BaseTextFieldProps,
 ): InputTemplateForm {
 	return {
 		name,
@@ -223,6 +224,7 @@ export function createSwitchInput(
 		default_value,
 		type: 'switch',
 		toString: (value) => (value ? 'true' : 'false'),
+		props,
 	};
 }
 
@@ -424,7 +426,7 @@ export function translateInputProps(
 export const registerForms: Array<InputTemplateForm> = [
 	createStringInput('Imię', 'first_name', '', { required: true }),
 	createStringInput('Nazwisko', 'last_name', '', {required: true}),
-	createStringInput('Email', 'email', '', {'type': 'email', required: true}),
+	createStringInput('Email', 'email', '', {type: 'email', required: false}),
 	createStringInput('Adres', 'address', '', { required: true }),
 	createStringInput('Telefon', 'phone_number', '', { required: true, helperText: 'Telefon musi być poprawny' }, undefined, (input: InputValue) => {
 		const phone = input?.toString();
@@ -435,5 +437,11 @@ export const registerForms: Array<InputTemplateForm> = [
 		return !(defaultNumberValidator(phone) && phone.length === 9);
 	}),
 	createDateInput('Data przyjęcia ikony', 'date', null, { required: true }, {disablePast: true}),
+	
 ];
 
+export const registerFormWithConsent: Array<InputTemplateForm> = [
+	...registerForms,
+	createSwitchInput('Wyrażam zgodę na przetwarzanie moich danych osobowych przez Parafię pw. Miłosierdzia Bożego w Oławie w celu organizacji peregrynacji ikony.', 'consent', false,
+		{required: true, helperText: 'Zgoda jest wymagana'}),
+];

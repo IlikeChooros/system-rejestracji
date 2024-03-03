@@ -68,7 +68,7 @@ export function AlertMessageProvider({
 		<Context.Provider value={{ setNewAlert }}>
 			<Snackbar
 				open={alertIsOpen}
-				autoHideDuration={6000}
+				autoHideDuration={null}
 				onClose={handleClose}
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 				message={alert?.msg}
@@ -78,6 +78,7 @@ export function AlertMessageProvider({
 					onClose={handleClose}
 					severity={alert?.type}
 					sx={{ width: '100%' }}
+					variant={'standard'}
 				>
 					{alert?.msg}
 				</Alert>

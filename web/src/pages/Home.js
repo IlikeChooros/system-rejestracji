@@ -1,7 +1,7 @@
 import React from "react";
 import MainFramework from "../components/MainFramework";
-import { Backdrop, Box, Card, CardContent, CircularProgress, Fade, Typography } from "@mui/material";
-import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { registerFormWithConsent, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
 import MuiCard from "../components/mui-ready/MuiCard.js";
@@ -23,11 +23,16 @@ export default function Home() {
     async function onSubmit(inputs) {
         let data = serializeFormsToEntries(inputs);
         data = Object.fromEntries(data);
+        let waitForEmail = data.email !== '';
 
-        setLoading(true);
+        setLoading(waitForEmail);
         try{
             await postAny('registry', data);
-            navigate('/thank-you');
+            let message = 'Dziękujemy za rejestrację';
+            if (waitForEmail){
+                message += ', sprawdź swoją skrzynkę emailową.';
+            }
+            navigate('/thank-you', {state: {message}});
         }
         catch(err){
             setReload(!reload);
@@ -64,7 +69,7 @@ export default function Home() {
         
         <MainFramework>
             <Box padding={3} textAlign={'center'}>
-                <FormDataProvider forms={registerForms}>
+                <FormDataProvider forms={registerFormWithConsent}>
                     <FormSubmitHandler onSubmit={onSubmit}>
                         <DateDiscard fetch={reload}/>
                         <MuiCard
@@ -73,16 +78,11 @@ export default function Home() {
                             subheader="Wypełnij poniższe pola, aby zarejestrować się na udział w peregrynacji ikony po parafii Miłosierdzia Bożego."
                             cardStyle={{ backgroundColor: '#F6FBFF' }}
                             headerStyle={{ paddingBottom: '8px' }}
-
                         >
-                            <CreateFormHandler grids={[4,4,4,4,4,4]} />
+                            <CreateFormHandler grids={[4,4,4,4,4,4,12]} />
                             <Box
                                 sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
                             >
-                                <ErrorButton
-                                    text="Anuluj"
-                                    props={{ onClick: () => {} }}
-                                />
                                 <Box sx={{ flexGrow: 1 }}></Box>
                                 <SuccessButton text={"Zarejestruj się"} />
                             </Box>
