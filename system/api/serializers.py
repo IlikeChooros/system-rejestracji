@@ -30,8 +30,9 @@ class RegistrySerializer(FastBaseSerializer):
 class ListRegistrySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Registry
-        fields = ['first_name', 'last_name', 'date']
+        fields = ['registry_uuid','first_name', 'last_name', 'date']
         extra_kwargs = {
+            'registry_uuid': {'read_only': True},
             'first_name': {'read_only': True},
             'last_name': {'read_only': True},
             'date': {'read_only': True},

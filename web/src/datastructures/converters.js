@@ -23,6 +23,9 @@ export function serializeDate(date, setNull = false) {
 export function objectForTable(object, converter = (map) => [...map], ...ignore_keys) {
 	var map = new Map(Object.entries(object));
 	var id = map.get('id');
+	if (!id) {
+		id = map.get('registry_uuid');
+	}
 	var participated = map.get('participated');
 
 	for (let i = 0; i < ignore_keys.length; i++) {

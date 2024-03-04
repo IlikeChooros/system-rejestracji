@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route} from 'react-router-dom';
+import { Routes, Route, Navigate} from 'react-router-dom';
 
 import Home from './pages/Home';
 import ThankYouPage from './pages/ThankYouPage';
@@ -22,12 +22,13 @@ function App() {
 function BareApp(){
 
   const {isAuthenticated} = useAuth();
+
   return(
     <Routes>
 						<Route
 							path=""
 							element={
-                  isAuthenticated ? <Admin /> : <Home />
+                <Navigate to={isAuthenticated ? '/admin' : '/register'} />
               }
 						/>
 

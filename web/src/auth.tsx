@@ -67,5 +67,3 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
         </AuthContext.Provider>
     );
 };
-
-

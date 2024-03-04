@@ -18,8 +18,6 @@ import { useDefaultTableContext } from '../../providers/CustomTable';
 
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
-import { client } from '../../network/clients/clients';
-import { useDefaultMessageContext } from '../../providers/AlertMessage';
 
 /**
  * ## CustomTableHeaderNoSort - table header without sorting functionality
