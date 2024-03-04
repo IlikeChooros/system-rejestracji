@@ -27,10 +27,11 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
     const [errors, setErrors] = React.useState("");
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("auth_token");
         if (token) {
             setToken(token);
             setIsAuthenticated(true);
+            console.log("token loaded", token);
         }
     }, []);
 
@@ -41,7 +42,8 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
             setToken(response.data.token);
             setIsAuthenticated(true);
             if (remember){
-                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("auth_token", response.data.token);
+                console.log("token saved", response.data.token);
             }
             setErrors("");
             returns = true;
@@ -59,6 +61,7 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
     const logout = () => {
         setIsAuthenticated(false);
         setToken("");
+        localStorage.removeItem("auth_token");
     };
 
     return (

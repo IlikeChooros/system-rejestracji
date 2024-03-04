@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Fade, Typography } from "@mui/material";
 import FullFramework from "../../components/FullFramework";
 import { CustomTableBody, RowBase } from "../../components/tables/CustomTable";
 import { ResponsisveTable } from "../../components/tables/ResponsiveTable";

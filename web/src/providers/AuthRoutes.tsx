@@ -7,7 +7,11 @@ export const ProtectedRoute: React.FC<any> = ({ children }) => {
     const {state} = useLocation();
     const { isAuthenticated } = useAuth();
 
-    if (isAuthenticated || state?.from === "/login") {
+    const isAllowed = React.useMemo(() => {
+        return isAuthenticated || state?.from === "/login";
+    }, [isAuthenticated]);
+
+    if (isAllowed) {
         return <>{children}</>;
     }
     return <Navigate to="/login" />;

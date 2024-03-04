@@ -1,6 +1,6 @@
 import React from "react";
 import MainFramework from "../components/MainFramework";
-import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Fade } from "@mui/material";
 import { registerFormWithConsent, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
@@ -68,28 +68,30 @@ export default function Home() {
         </Backdrop>
         
         <MainFramework>
+        <Fade in timeout={500}>
             <Box padding={3} textAlign={'center'}>
-                <FormDataProvider forms={registerFormWithConsent}>
-                    <FormSubmitHandler onSubmit={onSubmit}>
-                        <DateDiscard fetch={reload}/>
-                        <MuiCard
-                            sx={{ marginTop: '20px', padding: '10px' }}
-                            title={"Zarejestruj się"}
-                            subheader="Wypełnij poniższe pola, aby zarejestrować się na udział w peregrynacji ikony po parafii Miłosierdzia Bożego."
-                            cardStyle={{ backgroundColor: '#F6FBFF' }}
-                            headerStyle={{ paddingBottom: '8px' }}
-                        >
-                            <CreateFormHandler grids={[4,4,4,4,4,4,12]} />
-                            <Box
-                                sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
+                    <FormDataProvider forms={registerFormWithConsent}>
+                        <FormSubmitHandler onSubmit={onSubmit}>
+                            <DateDiscard fetch={reload}/>
+                            <MuiCard
+                                sx={{ marginTop: '20px', padding: '10px' }}
+                                title={"Zarejestruj się"}
+                                subheader="Wypełnij poniższe pola, aby zarejestrować się na udział w peregrynacji ikony po parafii Miłosierdzia Bożego."
+                                cardStyle={{ backgroundColor: '#F6FBFF' }}
+                                headerStyle={{ paddingBottom: '8px' }}
                             >
-                                <Box sx={{ flexGrow: 1 }}></Box>
-                                <SuccessButton text={"Zarejestruj się"} />
-                            </Box>
-                        </MuiCard>
-                    </FormSubmitHandler>
-                </FormDataProvider>
-            </Box>
+                                <CreateFormHandler grids={[4,4,4,4,4,4,12]} />
+                                <Box
+                                    sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
+                                >
+                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    <SuccessButton text={"Zarejestruj się"} />
+                                </Box>
+                            </MuiCard>
+                        </FormSubmitHandler>
+                    </FormDataProvider>
+                </Box>
+            </Fade>
         </MainFramework>
         </>
         

@@ -1,6 +1,6 @@
 import React from "react";
 import MainFramework from "../components/MainFramework";
-import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Fade } from "@mui/material";
 import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
@@ -75,43 +75,45 @@ export default function Manage() {
         </Backdrop>
 
         <MainFramework>
-            <Box padding={3} textAlign={'center'}>
-                <FormDataProvider forms={registerForms}>
-                    <FormSubmitHandler onSubmit={onSubmit}>
-                        <DateDiscard loader={reload} />
-                        <DefaultValueFormSetter 
-                            url={`registry/${id}`} 
-                            datakeys={['first_name', 'last_name', 'email', 'address','phone_number', 'date']} 
-                            ignoreLoading 
-                            onCatch={(err) => {
-                                navigate('error')
-                            }}
-                        />
-                        <MuiCard
-                            sx={{ marginTop: '20px', padding: '10px' }}
-                            title={"Zmodyfikuj dane"}
-                            subheader="Możesz zmodyfikować dane w formularzu poniżej lub usunąć wpis."
-                            cardStyle={{ backgroundColor: '#F6FBFF' }}
-                            headerStyle={{ paddingBottom: '8px' }}
-                        >
-                            <CreateFormHandler grids={[4,4,4,4,4,4]} />
-                            <Box
-                                sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
+            <Fade in timeout={500}>
+                <Box padding={3} textAlign={'center'}>
+                    <FormDataProvider forms={registerForms}>
+                        <FormSubmitHandler onSubmit={onSubmit}>
+                            <DateDiscard loader={reload} />
+                            <DefaultValueFormSetter 
+                                url={`registry/${id}`} 
+                                datakeys={['first_name', 'last_name', 'email', 'address','phone_number', 'date']} 
+                                ignoreLoading 
+                                onCatch={(err) => {
+                                    navigate('error')
+                                }}
+                            />
+                            <MuiCard
+                                sx={{ marginTop: '20px', padding: '10px' }}
+                                title={"Zmodyfikuj dane"}
+                                subheader="Możesz zmodyfikować dane w formularzu poniżej lub usunąć wpis."
+                                cardStyle={{ backgroundColor: '#F6FBFF' }}
+                                headerStyle={{ paddingBottom: '8px' }}
                             >
-                                <CustomButton
-                                    buttonBaseProps={{ type: 'button', onClick: deleteEntry }}
-                                    btnStyle={{ backgroundColor: '#FFEBEE' }}
-                                    boxStyle={{ color: '#B71C1C' }}
-                                    icon={<DeleteIcon />}
-                                    text="Usuń"
-                                />
-                                <Box sx={{ flexGrow: 1 }}></Box>
-                                <SuccessButton text={"Zmodyfikuj "} />
-                            </Box>
-                        </MuiCard>
-                    </FormSubmitHandler>
-                </FormDataProvider>
-            </Box>
+                                <CreateFormHandler grids={[4,4,4,4,4,4]} />
+                                <Box
+                                    sx={{ paddingTop: '10px', px: '20px', display: 'flex' }}
+                                >
+                                    <CustomButton
+                                        buttonBaseProps={{ type: 'button', onClick: deleteEntry }}
+                                        btnStyle={{ backgroundColor: '#FFEBEE' }}
+                                        boxStyle={{ color: '#B71C1C' }}
+                                        icon={<DeleteIcon />}
+                                        text="Usuń"
+                                    />
+                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    <SuccessButton text={"Zmodyfikuj "} />
+                                </Box>
+                            </MuiCard>
+                        </FormSubmitHandler>
+                    </FormDataProvider>
+                </Box>
+            </Fade>
         </MainFramework>
         </>
     );
