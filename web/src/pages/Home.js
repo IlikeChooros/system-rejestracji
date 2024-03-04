@@ -46,7 +46,7 @@ export default function Home() {
     }
 
     return (
-        <>
+    <MainFramework>
         <Backdrop
             sx={{
                 color: '#fff',
@@ -67,7 +67,7 @@ export default function Home() {
                 </MuiCard>
         </Backdrop>
         
-        <MainFramework>
+        
         <Fade in timeout={500}>
             <Box padding={3} textAlign={'center'}>
                     <FormDataProvider forms={registerFormWithConsent}>
@@ -92,9 +92,7 @@ export default function Home() {
                     </FormDataProvider>
                 </Box>
             </Fade>
-        </MainFramework>
-        </>
-        
+    </MainFramework>        
     );
 }
 

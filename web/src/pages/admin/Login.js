@@ -6,6 +6,7 @@ import { CreateFormHandler } from "../../components/create/CreateFormHandler.tsx
 import { useAuth } from "../../auth.tsx";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import MainFramework from "../../components/MainFramework.js";
 
 
 export default function Login(){
@@ -14,8 +15,8 @@ export default function Login(){
     const navigate = useNavigate();
 
     const forms = [
-        createStringInput('Nazwa użytkownika', 'username', '', {required: true, variant: 'outlined'}),
-        createStringInput('Hasło', 'password', '', {required: true, type: 'password', variant: 'outlined'}),
+        createStringInput('Nazwa użytkownika', 'username', '', {required: true, variant: 'filled'}),
+        createStringInput('Hasło', 'password', '', {required: true, type: 'password', variant: 'filled'}),
         createSwitchInput('Zapamiętaj mnie', 'remember', false),
     ]
 
@@ -26,6 +27,8 @@ export default function Login(){
     }, [isAuthenticated])
 
     return(
+
+    <MainFramework>
         <Container
             maxWidth='sm'
             sx={{
@@ -77,5 +80,6 @@ export default function Login(){
             </Fade>
 
         </Container>
+    </MainFramework>
     )
 }

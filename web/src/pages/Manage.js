@@ -63,7 +63,7 @@ export default function Manage() {
     }
 
     return (
-        <>
+    <MainFramework>
         <Backdrop
             sx={{
                 color: '#fff',
@@ -74,7 +74,7 @@ export default function Manage() {
             <CircularProgress color={'primary'} />
         </Backdrop>
 
-        <MainFramework>
+        
             <Fade in timeout={500}>
                 <Box padding={3} textAlign={'center'}>
                     <FormDataProvider forms={registerForms}>
@@ -114,8 +114,7 @@ export default function Manage() {
                     </FormDataProvider>
                 </Box>
             </Fade>
-        </MainFramework>
-        </>
+    </MainFramework>
     );
 }
 

@@ -243,6 +243,7 @@ function DetailsButton({ urls, model }) {
 			navigate={navigate}
 			EndIcon={<VisibilityIcon />}
 			text={'Szczegóły'}
+			props={{color: 'info'}}
 		/>
 	);
 }
