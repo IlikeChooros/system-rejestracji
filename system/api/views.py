@@ -1,9 +1,14 @@
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import permissions, status
+from rest_framework import permissions, status, viewsets, filters
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication, get_user_model
+from rest_framework_jwt.settings import api_settings
 from django.db.models import Q
 from . import models, serializers, email
+
+UserModel = get_user_model()
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 def verifyRegistry(registry, unique_date = True, unique_phone=True, unique_email=True):
     if unique_date and models.Registry.objects.filter(Q(date=registry['date']) & Q(deleted=False)).exists():
@@ -18,7 +23,6 @@ def verifyRegistry(registry, unique_date = True, unique_phone=True, unique_email
 
 class RegistryView(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
         exclude = request.GET.get('exclude', None)
@@ -46,7 +50,6 @@ class RegistryView(APIView):
     
 class ManageRegistryView(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)
 
     def get(self, request, pk):
         if isinstance(pk, str) and len(pk) != 36:
@@ -99,3 +102,42 @@ class ManageRegistryView(APIView):
             return Response(status=status.HTTP_200_OK)
         except models.Registry.DoesNotExist:
             return Response({'details': 'Rejestracja nie istnieje'}, status=status.HTTP_404_NOT_FOUND)
+        
+class LoginView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    def post(self, request):
+        serializer = serializers.LoginSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        user = UserModel.objects.filter(Q(username=data['username'])).first()
+        if not user or not user.check_password(data['password']):
+            return Response({'details': 'Niepoprawne dane'}, status=status.HTTP_400_BAD_REQUEST)
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+        return Response({'token': token}, status=status.HTTP_200_OK)
+    
+class RegistryListView(viewsets.ModelViewSet):
+    permission_classes = (
+        permissions.AllowAny, 
+        # permissions.IsAdminUser
+    )
+    # authentication_classes = (JSONWebTokenAuthentication,)
+    queryset = models.Registry.objects.filter(Q(deleted=False))
+    serializer_class = serializers.ListRegistrySerializer
+    http_method_names = ['get']
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    ordering = ['-date']
+    ordering_fields = ['date', 'first_name', 'last_name']
+    search_fields = ['^first_name', '^last_name', '=date']
+    
+    def list(self, request, *args, **kwargs):
+        qs = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)

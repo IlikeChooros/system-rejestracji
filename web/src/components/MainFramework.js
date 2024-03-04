@@ -1,4 +1,4 @@
-import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { defaultTheme } from '../utils/theme';
 
 export default function MainFramework({ children }) {

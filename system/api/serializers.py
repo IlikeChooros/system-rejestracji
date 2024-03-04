@@ -27,6 +27,16 @@ class RegistrySerializer(FastBaseSerializer):
             'date': formatDate(entry.date),
         }
 
+class ListRegistrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Registry
+        fields = ['first_name', 'last_name', 'date']
+        extra_kwargs = {
+            'first_name': {'read_only': True},
+            'last_name': {'read_only': True},
+            'date': {'read_only': True},
+        }
+
 class DataRegistrySerializer(FastBaseSerializer):
     def serialize(self, entry: models.Registry):
         return {
@@ -46,3 +56,7 @@ class UploadRegistrySerializer(serializers.ModelSerializer):
             'email': {'error_messages': {'unique': 'Email jest już zajęty'}},
             'phone_number': {'error_messages': {'unique': 'Numer telefonu jest już zajęty'}},
         }
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
