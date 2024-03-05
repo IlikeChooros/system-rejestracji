@@ -10,6 +10,7 @@ export default function MuiCard({
 	subtitleTypograhpyProps = {},
 	children,
 	cardHeaderProps = {},
+	cardProps = {},
 }) {
 	return (
 		<Card
@@ -19,6 +20,7 @@ export default function MuiCard({
 			}}
 			sx={sx}
 			elevation={0}
+			{...cardProps}
 		>
 			<CardHeader
 				title={title}

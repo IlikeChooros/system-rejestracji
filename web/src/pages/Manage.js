@@ -1,5 +1,4 @@
 import React from "react";
-import MainFramework from "../components/MainFramework";
 import { Backdrop, Box, CircularProgress, Fade } from "@mui/material";
 import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
@@ -16,7 +15,11 @@ import CustomButton from "../components/buttons/CustomButton.js";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { client } from "../clients/clients.js";
 
-export default function Manage() {
+export default function Manage({
+    to = '/thank-you',
+    action = undefined,
+    forms = registerForms,
+}) {
     
     const navigate = useNavigate();
     const {setNewAlert} = useDefaultMessageContext();
@@ -31,11 +34,11 @@ export default function Manage() {
         setLoading(true);
         try{
             await client.put(`registry/${id}`, data);
-            navigate('/thank-you', {state: {message: 'Pomyślnie zmodyfikowano wpis'}});
+            navigate(to, {state: {message: 'Pomyślnie zmodyfikowano wpis'}});
         }
         catch(err){
             setReload(!reload);
-            let details = err.response.data?.details;
+            let details = err.response.data?.detail;
             if (!details){
                 details = 'Nie udało się zarejestrować';
             } 
@@ -48,12 +51,12 @@ export default function Manage() {
         setLoading(true);
         try{
             await client.delete(`registry/${id}`);
-            navigate('/thank-you', {state: {message: 
+            navigate(to, {state: {message: 
                 'Pomyślnie usunięto wpis'}});
         }
         catch(err){
             setReload(!reload);
-            let details = err.response.data?.details;
+            let details = err.response.data?.detail;
             if (!details){
                 details = 'Nie udało się usunąć';
             } 
@@ -63,7 +66,7 @@ export default function Manage() {
     }
 
     return (
-    <MainFramework>
+    <>
         <Backdrop
             sx={{
                 color: '#fff',
@@ -77,7 +80,7 @@ export default function Manage() {
         
             <Fade in timeout={500}>
                 <Box padding={3} textAlign={'center'}>
-                    <FormDataProvider forms={registerForms}>
+                    <FormDataProvider forms={forms}>
                         <FormSubmitHandler onSubmit={onSubmit}>
                             <DateDiscard loader={reload} />
                             <DefaultValueFormSetter 
@@ -94,6 +97,9 @@ export default function Manage() {
                                 subheader="Możesz zmodyfikować dane w formularzu poniżej lub usunąć wpis."
                                 cardStyle={{ backgroundColor: '#F6FBFF' }}
                                 headerStyle={{ paddingBottom: '8px' }}
+                                cardHeaderProps={{
+                                    action: action
+                                }}
                             >
                                 <CreateFormHandler grids={[4,4,4,4,4,4]} />
                                 <Box
@@ -114,7 +120,7 @@ export default function Manage() {
                     </FormDataProvider>
                 </Box>
             </Fade>
-    </MainFramework>
+    </>
     );
 }
 

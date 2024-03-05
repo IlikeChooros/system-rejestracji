@@ -16,7 +16,7 @@ export default function ChoiceCreateInput({
 			}}
 			fullWidth
 			size="small"
-			color="secondary"
+			color="primary"
 			variant="standard"
 			{...input.props}
 		>

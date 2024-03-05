@@ -43,3 +43,53 @@ export function setErrorMessage(error, default_message = 'Err') {
 		? String(error.response.data.details)
 		: default_message;
 }
+
+export function formsToEntriesSearch(forms = []) {
+	let search = new Map();
+	for (let i = 0; i < forms.length; i++) {
+		switch (forms[i].type) {
+			case 'checkbox-list':
+				search.set(
+					forms[i].field_name,
+					forms[i].datalist
+						.filter((option) => option.checked)
+						.map((option) => {
+							return {
+								id: option.value,
+								name: option.name,
+							};
+						}),
+				);
+				break;
+			default:
+				search.set(
+					forms[i].field_name,
+					forms[i].toString(forms[i].value),
+				);
+		}
+	}
+	return search;
+}
+
+export function formsEntriesMapToSearch(mapForms = new Map()) {
+	let forms = [...mapForms],
+		search = '';
+
+	for (let i = 0; i < forms.length; i++) {
+		switch (typeof forms[i][1]) {
+			case 'object':
+				search += `${forms[i][0]}=${
+					forms[i][1]?.length
+						? forms[i][1].map((value) => value.id).join()
+						: ''
+				}`;
+				break;
+			default:
+				search += `${forms[i][0]}=${forms[i][1]}`;
+		}
+		if (i !== forms.length - 1) {
+			search += '&';
+		}
+	}
+	return search;
+}

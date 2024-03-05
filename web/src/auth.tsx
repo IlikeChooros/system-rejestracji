@@ -31,7 +31,6 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
         if (token) {
             setToken(token);
             setIsAuthenticated(true);
-            console.log("token loaded", token);
         }
     }, []);
 
@@ -43,17 +42,18 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
             setIsAuthenticated(true);
             if (remember){
                 localStorage.setItem("auth_token", response.data.token);
-                console.log("token saved", response.data.token);
             }
             setErrors("");
             returns = true;
         }
         catch (e) {
             let message = "An error occurred";
-            if (e.response.data?.details) {
-                message = e.response.data.details;
+            if (e.response.data?.detail) {
+                message = e.response.data.detail;
             }
             setErrors(message);
+            localStorage.removeItem("auth_token");
+            setToken("");
         }
         return returns;
     };

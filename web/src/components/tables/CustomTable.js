@@ -210,10 +210,11 @@ function CustomButton({
 	props,
 	useUrl = true,
 	setOpen = (arg) => {},
+
+	RenderButton = Button
 }) {
 	return (
-		<Button
-			{...props}
+		<RenderButton
 			style={{
 				textTransform: 'none',
 				marginLeft: '5px',
@@ -228,9 +229,10 @@ function CustomButton({
 				}
 			}}
 			endIcon={EndIcon}
+			{...props}
 		>
 			{text}
-		</Button>
+		</RenderButton>
 	);
 }
 

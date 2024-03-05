@@ -47,6 +47,7 @@ class DataRegistrySerializer(FastBaseSerializer):
             'address': entry.address,
             'email': entry.email,
             'date': formatDate(entry.date),
+            'deleted': entry.deleted,
         }
 
 class UploadRegistrySerializer(serializers.ModelSerializer):
@@ -57,6 +58,9 @@ class UploadRegistrySerializer(serializers.ModelSerializer):
             'email': {'error_messages': {'unique': 'Email jest już zajęty'}},
             'phone_number': {'error_messages': {'unique': 'Numer telefonu jest już zajęty'}},
         }
+    def check_user(self, request):
+        if self.validated_data.get('deleted', False) and not request.user.is_superuser:
+            raise serializers.ValidationError({'detail': 'Nie masz uprawnień do usuwania rekordów'})
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

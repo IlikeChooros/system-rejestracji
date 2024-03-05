@@ -412,6 +412,13 @@ export function setHeights(
 	return { ...input, minHeight, maxHeight };
 }
 
+export function setProps(
+	input: InputTemplateForm,
+	props: BaseTextFieldProps,
+): InputTemplateForm {
+	return { ...input, props };
+}
+
 export function translateInputProps(
 	forms: Array<InputTemplateForm>,
 	translateFunc: (arg: InputTemplateForm) => InputTemplateForm,
@@ -422,6 +429,20 @@ export function translateInputProps(
 	}
 	return translated;
 }
+
+export const statusInput: InputTemplateForm = createChoiceInput(
+	'Status', 'deleted', 'false', 
+	[{
+		value: 'false',
+		name: 'Aktywny'
+	}, {
+		value: 'true',
+		name: 'Usunięty'
+	}],
+	{
+		variant: 'standard'
+	}, true
+)
 
 export const registerForms: Array<InputTemplateForm> = [
 	createStringInput('Imię', 'first_name', '', { required: true }),
@@ -438,6 +459,11 @@ export const registerForms: Array<InputTemplateForm> = [
 	}),
 	createDateInput('Data przyjęcia ikony', 'date', null, { required: true }, {disablePast: true}),
 	
+];
+
+export const registerFormsWithDelete: Array<InputTemplateForm> = [
+	...registerForms,
+	statusInput
 ];
 
 export const registerFormWithConsent: Array<InputTemplateForm> = [

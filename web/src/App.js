@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate} from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate} from 'react-router-dom';
 
 import Home from './pages/Home';
 import ThankYouPage from './pages/ThankYouPage';
@@ -10,6 +10,11 @@ import { AuthProvider, useAuth } from './auth.tsx';
 import Login from './pages/admin/Login';
 import { ProtectedRoute } from './providers/AuthRoutes.tsx';
 import Admin from './pages/admin/Admin.js';
+import MainFramework from './components/MainFramework.js';
+import FullFramework from './components/FullFramework.js';
+import { Button, IconButton } from '@mui/material';
+import GoBackIcon from '@mui/icons-material/ArrowBackIosNew';
+import { registerFormsWithDelete } from './datastructures/input-objects.ts';
 
 function App() {
   return(
@@ -22,6 +27,7 @@ function App() {
 function BareApp(){
 
   const {isAuthenticated} = useAuth();
+  const navigate = useNavigate();
 
   return(
     <Routes>
@@ -50,8 +56,36 @@ function BareApp(){
               path="manage/:id"
               element={
                 <AlertMessageProvider>
-                  <Manage />
+                  <MainFramework>
+                    <Manage />
+                  </MainFramework>
                 </AlertMessageProvider>
+              }
+            />
+
+            <Route 
+              path="admin/manage/:id"
+              element={
+                <ProtectedRoute>
+                  <AlertMessageProvider>
+                    <FullFramework>
+                      <Manage 
+                        to='/admin'
+                        forms={registerFormsWithDelete}
+                        action={
+                          <Button
+                            onClick={() => navigate(-1)}
+                            endIcon={
+                              <GoBackIcon />
+                            }
+                          >
+                            Powrót
+                          </Button>
+                        } 
+                      />
+                    </FullFramework>
+                  </AlertMessageProvider>
+                </ProtectedRoute>
               }
             />
 

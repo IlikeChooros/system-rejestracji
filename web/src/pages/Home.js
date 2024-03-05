@@ -6,7 +6,7 @@ import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx"
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
 import MuiCard from "../components/mui-ready/MuiCard.js";
 import { CreateFormHandler } from "../components/create/CreateFormHandler.tsx";
-import { ErrorButton, SuccessButton } from "../components/buttons/Buttons.js";
+import { SuccessButton } from "../components/buttons/Buttons.js";
 import { fetchAny, postAny } from "../clients/dataRequest.js";
 import dayjs from "dayjs";
 import { useDefaultMessageContext } from "../providers/AlertMessage.js";
@@ -36,7 +36,7 @@ export default function Home() {
         }
         catch(err){
             setReload(!reload);
-            let details = err.response.data?.details;
+            let details = err.response.data?.detail;
             if (!details){
                 details = 'Nie udało się zarejestrować';
             } 
@@ -105,7 +105,6 @@ function DateDiscard({fetch = true}){
                 let dates = [];
                 if(data){
                     dates = data.map((date) => new dayjs(date.date));
-                    console.log(dates);
                 }
                 dispatch({type: 'update-field', id: 5, field: 'dateProps', value: {
                     disablePast: true,

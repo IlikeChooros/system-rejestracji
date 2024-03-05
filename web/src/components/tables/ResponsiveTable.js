@@ -68,6 +68,7 @@ export function UnstyledResponsiveTable({
 	body,
 	context,
 	cardActions,
+	cardProps,
 }) {
 	const { errMsg, setPage, size, page, setState, isLoading } = context();
 	const [lowerLoad, setLowerLoad] = useState(0);
@@ -93,12 +94,7 @@ export function UnstyledResponsiveTable({
 			</Grid>
 
 			<MuiCard
-				cardStyle={{
-					backgroundColor: '#f9fbfc',
-					paddingTop: 0,
-					marginTop: 0,
-					position: 'relative',
-				}}
+				cardProps={cardProps}
 			>
 				{cardActions && (
 					<CardActions style={{ padding: 0, marginTop: 0 }}>
@@ -111,10 +107,11 @@ export function UnstyledResponsiveTable({
 					sx={{
 						backgroundColor: '#f2f2f2',
 						position: 'absolute',
+						display: 'flex',
 						zIndex: (theme) => theme.zIndex.drawer + 1,
 					}}
 				>
-					<CircularProgress sx={{ color: 'crimson' }} />
+					<CircularProgress sx={{ color: 'primary' }} />
 				</Backdrop>
 				<TableContainer>
 					<Table size="small">
@@ -124,7 +121,7 @@ export function UnstyledResponsiveTable({
 				</TableContainer>
 			</MuiCard>
 
-			{/* {errMsg && <ErrorAlertReload errMsg={errMsg} />} */}
+			{<Typography textAlign={'center'}>{errMsg}</Typography>}
 			{/* {errMsg ? (
 				<ErrorAlertReload errMsg={errMsg} />
 			) : isLoading && !size ? (

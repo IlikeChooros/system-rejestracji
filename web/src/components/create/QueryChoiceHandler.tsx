@@ -7,7 +7,7 @@ import { fetchAny } from '../../clients/dataRequest.js';
 import { Datalist } from '../../datastructures/input-objects.ts';
 
 interface QueryChoiceHandlerProps {
-	url: string;
+	url?: string;
 	datakeys: Array<string>;
 	formIndexes: Array<number>;
 	useContext?: () => FormDataContext;
@@ -24,6 +24,9 @@ export function QueryChoiceHandler({
 	const { state, dispatch } = useContext();
 
 	useEffect(() => {
+		if (!url) {
+			return;
+		}
 		fetchAny(url).then((data) => {
 			if (!data) {
 				return;
