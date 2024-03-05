@@ -131,7 +131,7 @@ class RegistryListView(viewsets.ModelViewSet):
     http_method_names = ['get']
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     filter_class = api_filters.RegistryFilter
-    ordering = ['-date']
+    ordering = ['date']
     ordering_fields = ['date', 'first_name', 'last_name']
     search_fields = ['^first_name', '^last_name', '=date']
     
