@@ -145,6 +145,9 @@ export function NewFilterSet({
 					useContextForUpdate={useContextForUpdate}
 					grids={grids}
 				/>
+				
+				{/* This button is hidden and is used to submit the form */}
+				<button type="submit" style={{ display: 'none' }} />
 			</FormSubmitHandler>
 		</FormDataProvider>
 	);

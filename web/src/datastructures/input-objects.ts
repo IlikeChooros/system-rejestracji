@@ -458,11 +458,11 @@ export const registerForms: Array<InputTemplateForm> = [
 		return !(defaultNumberValidator(phone) && phone.length === 9);
 	}),
 	createDateInput('Data przyjęcia ikony', 'date', null, { required: true }, {disablePast: true}),
-	
 ];
 
-export const registerFormsWithDelete: Array<InputTemplateForm> = [
-	...registerForms,
+export const registerFormsAdmin: Array<InputTemplateForm> = [
+	...registerForms.slice(0, -1),
+	createDateInput('Data przyjęcia ikony', 'date', null, { required: true }),
 	statusInput
 ];
 

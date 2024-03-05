@@ -1,6 +1,6 @@
 import React from "react";
 import { Backdrop, Box, CircularProgress, Fade } from "@mui/material";
-import { registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
+import { checkIfErrors, registerForms, serializeFormsToEntries } from "../datastructures/input-objects.ts";
 import { FormDataProvider, useFormDataContext } from "../providers/FormData.tsx";
 import { FormSubmitHandler } from "../components/create/FormGenerator.tsx";
 import MuiCard from "../components/mui-ready/MuiCard.js";
@@ -19,6 +19,7 @@ export default function Manage({
     to = '/thank-you',
     action = undefined,
     forms = registerForms,
+    default_keys = ['first_name', 'last_name', 'email', 'address','phone_number', 'date']
 }) {
     
     const navigate = useNavigate();
@@ -28,6 +29,11 @@ export default function Manage({
     const [loading, setLoading] = React.useState(false);
 
     async function onSubmit(inputs) {
+        if (checkIfErrors(inputs)){
+            setNewAlert('Są błędy w formularzu', 'error');
+            return;
+        }
+
         let data = serializeFormsToEntries(inputs);
         data = Object.fromEntries(data);
 
@@ -85,7 +91,7 @@ export default function Manage({
                             <DateDiscard loader={reload} />
                             <DefaultValueFormSetter 
                                 url={`registry/${id}`} 
-                                datakeys={['first_name', 'last_name', 'email', 'address','phone_number', 'date']} 
+                                datakeys={default_keys} 
                                 ignoreLoading 
                                 onCatch={(err) => {
                                     navigate('error')
@@ -138,11 +144,12 @@ function DateDiscard({loader=true}){
                 if(data){
                     dates = data.map((date) => new dayjs(date.date));
                 }
+                let dateProps = state.forms[5].dateProps;
                 dispatch({type: 'update-field', id: 5, field: 'dateProps', value: {
-                    disablePast: true,
                     shouldDisableDate: (date) => {
                         return dates.some((d) => d.isSame(date, 'day'));
-                    }
+                    },
+                    ...dateProps
                 }});
             }).catch((err) => {
                 console.log(err);

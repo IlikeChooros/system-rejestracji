@@ -12,9 +12,9 @@ import { ProtectedRoute } from './providers/AuthRoutes.tsx';
 import Admin from './pages/admin/Admin.js';
 import MainFramework from './components/MainFramework.js';
 import FullFramework from './components/FullFramework.js';
-import { Button, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import GoBackIcon from '@mui/icons-material/ArrowBackIosNew';
-import { registerFormsWithDelete } from './datastructures/input-objects.ts';
+import { registerFormsAdmin } from './datastructures/input-objects.ts';
 
 function App() {
   return(
@@ -71,7 +71,12 @@ function BareApp(){
                     <FullFramework>
                       <Manage 
                         to='/admin'
-                        forms={registerFormsWithDelete}
+                        forms={registerFormsAdmin}
+                        default_keys={[
+                          'first_name', 'last_name', 'email',
+                          'address','phone_number', 'date',
+                          'deleted'
+                        ]}
                         action={
                           <Button
                             onClick={() => navigate(-1)}

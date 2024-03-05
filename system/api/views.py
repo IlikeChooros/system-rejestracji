@@ -11,14 +11,14 @@ UserModel = get_user_model()
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-def verifyRegistry(registry, unique_date = True, unique_phone=True, unique_email=True):
-    if unique_date and models.Registry.objects.filter(Q(date=registry['date']) & Q(deleted=False)).exists():
+def verifyRegistry(registry, uuid):
+    if models.Registry.objects.filter(Q(date=registry['date']) & Q(deleted=False) & ~Q(registry_uuid=uuid)).exists():
         return {'detail': 'Wizyta w tym dniu jest już zarejestrowana'}
 
-    if unique_phone and models.Registry.objects.filter(Q(phone_number=registry['phone_number']) & Q(deleted=False)).exists():
+    if models.Registry.objects.filter(Q(phone_number=registry['phone_number']) & Q(deleted=False) & ~Q(registry_uuid=uuid)).exists():
         return {'detail': 'Numer telefonu jest już zajęty'}
 
-    if unique_email and models.Registry.objects.filter(Q(email__gt='') & Q(email=registry['email']) & Q(deleted=False)).exists():
+    if models.Registry.objects.filter(Q(email__gt='') & Q(email=registry['email']) & Q(deleted=False) & ~Q(registry_uuid=uuid)).exists():
         return {'detail': 'Email jest już zajęty'}
     return None
 
@@ -40,7 +40,7 @@ class RegistryView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         
-        error = verifyRegistry(data)
+        error = verifyRegistry(data, None)
         if error:
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
         
@@ -82,11 +82,7 @@ class ManageRegistryView(APIView):
             # użytkownik nie próbuje zmienić status usunięcia rekordu
             serializer.check_user(request)
 
-            unique_date = registry.date != data['date']
-            unique_phone = registry.phone_number != data['phone_number']
-            unique_email = registry.email != data['email']
-
-            error = verifyRegistry(data, unique_date, unique_phone, unique_email)
+            error = verifyRegistry(data, registry.registry_uuid)
             if error:
                 return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
